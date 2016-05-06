@@ -1,0 +1,25 @@
+sudo: false
+language: cpp
+compiler:
+  - gcc
+  - clang
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - clang
+
+script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_CXX_COMPILER=$COMPILER .. && make
+  - ./hw8_tests/hashed_entry_tests/runHW8HashedEntryTests_1
+  - ./hw8_tests/hashed_dictionary_basicTests/runHW8HashedDictionaryConstructorTests_2
+  - ./hw8_tests/hashed_dictionary_addTest/runHW8AddTests_3
+  - ./hw8_tests/hashed_dictionary_removeTest/runHW8RemoveTests_4
+  - ./hw8_tests/hashed_dictionary_miscTest/runHW8MiscTests_5

@@ -1,0 +1,4 @@
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+add_executable(runHW8HashedDictionaryConstructorTests_2 hashed_dictionary_basicTest.cpp)
+target_link_libraries(runHW8HashedDictionaryConstructorTests_2 hw8_library gtest gtest_main)

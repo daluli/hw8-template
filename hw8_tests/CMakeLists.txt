@@ -1,0 +1,9 @@
+project(hw8_tests)
+
+add_subdirectory(lib/gtest-1.7.0)
+add_subdirectory(basic_tests)
+add_subdirectory(hashed_entry_tests)
+add_subdirectory(hashed_dictionary_basicTests)
+add_subdirectory(hashed_dictionary_addTest)
+add_subdirectory(hashed_dictionary_removeTest)
+add_subdirectory(hashed_dictionary_miscTest)
