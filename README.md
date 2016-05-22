@@ -2,9 +2,10 @@
 
 #First-Name Last-Name
 
-TODO - Update your name in this readme.
+#TODO - Update your name in this readme.
+Dalu Li
 
-TODO - Add a badge from travis CI here
+#TODO - Add a badge from travis CI here
 
 ##Problem statement:
 Implement a Hashed Dictionary. You will have to first implement the necessary functions in `HashedEntry.h`
