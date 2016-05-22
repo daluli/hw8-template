@@ -140,45 +140,122 @@ HashedEntry<KeyType, ItemType> &HashedDictionary<KeyType, ItemType>::operator[](
  */
 
 template<class KeyType, class ItemType>
-void HashedDictionary<KeyType, ItemType>::destroyDictionary() {
-    //TODO
-
+void HashedDictionary<KeyType, ItemType>::destroyDictionary() 
+{
+	for (int index = 0; index < hashTableSize; index++) {
+        HashedEntry<KeyType, ItemType> *chainPtr = hashTable[index];
+        while (chainPtr != nullptr) 
+		{
+			HashedEntry<KeyType, ItemType>* p = chainPtr->getNext();
+			delete chainPtr;
+			chainPtr = p;
+        }
+		hashTable[index] = nullptr;
+    }
+	
+	//delete[] hashTable;
+	//hashTable = 0;
+	itemCount = 0;
 }
 
 template<class KeyType, class ItemType>
-bool HashedDictionary<KeyType, ItemType>::isEmpty() const {
-    //TODO
+bool HashedDictionary<KeyType, ItemType>::isEmpty() const 
+{
+	return itemCount==0;
 }
 
 template<class KeyType, class ItemType>
-int HashedDictionary<KeyType, ItemType>::getNumberOfItems() const {
-    //TODO
+int HashedDictionary<KeyType, ItemType>::getNumberOfItems() const 
+{
+	return itemCount;
 }
 
 template<class KeyType, class ItemType>
-bool HashedDictionary<KeyType, ItemType>::add(const KeyType &searchKey, const ItemType &newItem) {
-    //TODO
-    return false;
+bool HashedDictionary<KeyType, ItemType>::add(const KeyType &searchKey, const ItemType &newItem) 
+{
+	int itemHashIndex = getHashIndex(searchKey);
+    HashedEntry<KeyType, ItemType> *p = hashTable[itemHashIndex];
+	HashedEntry<KeyType, ItemType> *q = nullptr;
+
+    // Short circuit evaluation is important here
+    while ((p != nullptr) && (searchKey != p->getKey())) 
+	{
+		q = p;
+        p = p->getNext();
+    } // end while
+
+    if (p != nullptr) // already existed
+        return false;
+	
+	p = new HashedEntry<KeyType, ItemType>(searchKey, newItem);
+	if(!p) return false;
+	
+	itemCount++;
+	
+	if(q)
+		q->setNext(p);
+	else
+		hashTable[itemHashIndex] = p;
+
+    return true;
 }
 
 template<class KeyType, class ItemType>
-bool HashedDictionary<KeyType, ItemType>::remove(const KeyType &searchKey) {
-    //TODO
-    return false;
+bool HashedDictionary<KeyType, ItemType>::remove(const KeyType &searchKey) 
+{
+    int itemHashIndex = getHashIndex(searchKey);
+    HashedEntry<KeyType, ItemType> *p = hashTable[itemHashIndex];
+	HashedEntry<KeyType, ItemType> *q = nullptr;
+
+    // Short circuit evaluation is important here
+    while ((p != nullptr) && (searchKey != p->getKey())) 
+	{
+		q = p;
+        p = p->getNext();
+    } // end while
+
+    if (p == nullptr) // not existed
+        return false;
+
+	if(q)
+		q->setNext(p->getNext());
+	else
+		hashTable[itemHashIndex] = p->getNext();
+		
+	delete p;
+	itemCount--;
+	return true;
 }
 
 template<class KeyType, class ItemType>
-ItemType HashedDictionary<KeyType, ItemType>::getItem(const KeyType &searchKey) const {
-    //TODO
+ItemType HashedDictionary<KeyType, ItemType>::getItem(const KeyType &searchKey) const 
+{
+	int itemHashIndex = getHashIndex(searchKey);
+    HashedEntry<KeyType, ItemType> *chainPtr = hashTable[itemHashIndex];
 
-    return nullptr;
+    // Short circuit evaluation is important here
+    while ((chainPtr != nullptr) && (searchKey != chainPtr->getKey())) {
+        chainPtr = chainPtr->getNext();
+    } // end while
+
+    if (chainPtr == nullptr)
+        throw std::exception();
+
+    return chainPtr->getItem();
 }
 
 template<class KeyType, class ItemType>
-bool HashedDictionary<KeyType, ItemType>::contains(const KeyType &searchKey) const {
-    //TODO
+bool HashedDictionary<KeyType, ItemType>::contains(const KeyType &searchKey) const 
+{
+	int itemHashIndex = getHashIndex(searchKey);
+    HashedEntry<KeyType, ItemType> *chainPtr = hashTable[itemHashIndex];
 
-    return false;
+    // Short circuit evaluation is important here
+    while ((chainPtr != nullptr) && (searchKey != chainPtr->getKey())) {
+        chainPtr = chainPtr->getNext();
+    } // end while
+
+    return (chainPtr == nullptr) ? false : true;
 }
 
 
